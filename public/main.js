@@ -5,6 +5,21 @@ let penColor = "black";
 let redo_drawings = [];
 let currentDrawing = [];
 
+const shapebtn = document.querySelector(".shapes");
+shapebtn.addEventListener("click", () => {
+  shapebtn.classList.toggle("expanded");
+
+  let shapes = document.querySelectorAll(".shape");
+  shapes.forEach((e) => {
+    e.classList.toggle("show");
+  });
+});
+
+let shapes = document.querySelectorAll(".shape");
+shapes.forEach((e) => {
+  e.addEventListener("click", () => console.log(e));
+});
+
 const colbtns = document.querySelectorAll(".col");
 colbtns.forEach((btn) => {
   btn.addEventListener("click", () => {
