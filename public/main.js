@@ -5,19 +5,12 @@ let penColor = "black";
 let redo_drawings = [];
 let currentDrawing = [];
 
-const colpkr = document.querySelector(".color-pick");
-
-colpkr.addEventListener("click", () => {
-  document.querySelector(".color-picker-container").classList.toggle("show");
-});
-
 const colbtns = document.querySelectorAll(".col");
 colbtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     // console.log(btn);
     let col = btn.dataset.col;
-    document.querySelector(".color-picker-container").classList.toggle("show");
-    document.querySelector(".sel-col").style.backgroundColor = col;
+    document.querySelector(".pen").style.color = col;
     penColor = col;
   });
 });
@@ -141,6 +134,7 @@ penThickness.addEventListener("change", (e) => changePenSize(e));
 colorPicker.addEventListener("change", (e) => {
   penColor = e.target.value;
   painting = false;
+  document.querySelector(".pen").style.color = penColor;
 });
 
 function handleInit(msg) {
