@@ -39,6 +39,10 @@ const colorPicker = document.getElementById("color-picker");
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+
+ctx.fillStyle = "#fff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
 // const socket = io("http://localhost:3000");
 // socket.on("init", handleInit);
 penThickness.value = penSize;
