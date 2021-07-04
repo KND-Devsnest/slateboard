@@ -32,9 +32,16 @@ body {
 }
 
 .canvas {
-  width: 100%;
-  height: 100%;
+  width: 97%;
+  height: 95%;
   cursor: crosshair;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 1vh;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Toolbar */
@@ -48,12 +55,6 @@ body {
   width: 100vw;
   position: relative;
 } */
-
-.container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
 
 .toolbar {
   position: absolute;
