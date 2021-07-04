@@ -1,17 +1,3 @@
-var socket,
-  URL = "http://localhost:8000";
-let drawings = [];
-socket = io.connect(URL);
-socket.on("hi", (data) => {
-  drawings = data;
-  reDraw();
-});
-
-socket.on("someonesMouseMoved", (data) => {
-  drawings.push(data);
-  reDraw();
-});
-
 document.oncontextmenu = () => false;
 
 const canvas = document.getElementById("canvas");
@@ -24,6 +10,9 @@ canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 // const socket = io("http://localhost:3000");
 // socket.on("init", handleInit);
+var socket,
+  URL = "http://localhost:8000";
+let drawings = [];
 let painting = false;
 let penSize = 10;
 let penColor = "black";
@@ -31,6 +20,31 @@ let redo_drawings = [];
 let currentDrawing = [];
 
 penThickness.value = penSize;
+
+socket = io.connect(URL);
+socket.on("hello", (data) => {
+  console.log(data);
+  drawings = data;
+  draw(drawings);
+});
+
+socket.on("someonesMouseMoved", (data) => {
+  console.log(data);
+  drawings.push(data);
+  painting = true;
+  reDraw(data);
+  ctx.beginPath();
+  painting = false;
+});
+
+socket.on("clearCanvas", () => {
+  console.log("Someone cleared the canvas");
+  delCanvas();
+});
+socket.on("undo", () => {
+  console.log("Someone did UNDOD");
+  undoit();
+});
 
 function changePenSize(e) {
   console.log(e);
@@ -46,9 +60,15 @@ function redoDrawing() {
     ctx.beginPath();
     drawings.push(redo_drawings.pop());
   }
+  socket.emit("userAction", "redo");
 }
 
 function undoDraw() {
+  undoit();
+  socket.emit("userAction", "undo");
+}
+
+function undoit() {
   redo_drawings.push(drawings.pop()); //save values in redo array
   console.log(drawings);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -63,6 +83,11 @@ function undoDraw() {
 }
 
 function clearCanvas() {
+  delCanvas();
+  socket.emit("userAction", "clear");
+}
+
+function delCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawings = [];
   redo_drawings = [];
@@ -101,6 +126,7 @@ function endPosition() {
   ctx.beginPath();
   console.log(currentDrawing);
   drawings.push(currentDrawing);
+  socket.emit("someonesMouseMoved", currentDrawing);
 }
 function draw(e) {
   if (!painting) return;
@@ -131,7 +157,12 @@ function handleInit(msg) {
 }
 
 window.addEventListener("resize", (event) => {
-  reDraw();
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  painting = true;
+  //   reDraw(drawings);
+  ctx.beginPath();
+  painting = false;
 });
 
 document.getElementById("pen").addEventListener("click", () => {
