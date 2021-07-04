@@ -8,7 +8,7 @@ io.sockets.on("connection", newConnection);
 const drawings = [];
 function newConnection(socket) {
   console.log("new connection" + socket.id);
-  socket.broadcast.emit("hello");
+  socket.emit("hello", drawings);
   console.log(drawings);
   socket.on("mouse", mouseMsg);
   function mouseMsg(data) {
