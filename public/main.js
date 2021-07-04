@@ -1,3 +1,36 @@
+// variables
+let painting = false;
+let penSize = 10;
+let penColor = "black";
+let redo_drawings = [];
+let currentDrawing = [];
+let shapeType = 'eraser';// [line, square, rectangle, circle, ellipse, eraser]
+
+const shapebtn = document.querySelector(".shapes");
+shapebtn.addEventListener("click", () => {
+  shapebtn.classList.toggle("expanded");
+
+  let shapes = document.querySelectorAll(".shape");
+  shapes.forEach((e) => {
+    e.classList.toggle("show");
+  });
+});
+
+let shapes = document.querySelectorAll(".shape");
+shapes.forEach((e) => {
+  e.addEventListener("click", () => console.log(e));
+});
+
+const colbtns = document.querySelectorAll(".col");
+colbtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // console.log(btn);
+    let col = btn.dataset.col;
+    document.querySelector(".pen").style.color = col;
+    penColor = col;
+  });
+});
+
 var socket,
   URL = "http://localhost:8000";
 let drawings = [];
@@ -23,17 +56,14 @@ const colorPicker = document.getElementById("color-picker");
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+
+ctx.fillStyle = "#fff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
 // const socket = io("http://localhost:3000");
 // socket.on("init", handleInit);
-let shapeType = 'eraser';// [line, square, rectangle, circle, ellipse, eraser]
-let painting = false;
-let penSize = 10;
-let penColor = "black";
-let redo_drawings = [];
-let currentDrawing = [];
 
 penThickness.value = penSize;
-
 function changePenSize(e) {
   console.log(e);
   penSize = e.target.value;
@@ -268,6 +298,7 @@ penThickness.addEventListener("change", (e) => changePenSize(e));
 colorPicker.addEventListener("change", (e) => {
   penColor = e.target.value;
   painting = false;
+  document.querySelector(".pen").style.color = penColor;
 });
 
 function handleInit(msg) {
