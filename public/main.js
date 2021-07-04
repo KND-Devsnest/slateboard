@@ -1,16 +1,16 @@
-var socket,
-  URL = "http://localhost:8000";
-let drawings = [];
-socket = io.connect(URL);
-socket.on("hi", (data) => {
-  drawings = data;
-  reDraw();
-});
+// var socket,
+//   URL = "http://localhost:8000";
+// let drawings = [];
+// socket = io.connect(URL);
+// socket.on("hi", (data) => {
+//   drawings = data;
+//   reDraw();
+// });
 
-socket.on("someonesMouseMoved", (data) => {
-  drawings.push(data);
-  reDraw();
-});
+// socket.on("someonesMouseMoved", (data) => {
+//   drawings.push(data);
+//   reDraw();
+// });
 
 document.oncontextmenu = () => false;
 
@@ -29,7 +29,8 @@ let penSize = 10;
 let penColor = "black";
 let redo_drawings = [];
 let currentDrawing = [];
-
+let currentPath;
+let currentPathType = "rectangle";
 let maxX = 0, maxY = 0;
 let minX = canvas.width, minY = canvas.height;
 
@@ -95,18 +96,26 @@ currentDrawing = {
 */
 function startPosition(e) {
   painting = true;
-  currentDrawing = { points: [{startX: e.clientX, startY: e.clientY}], thickness: penSize, color: penColor };
+  currentDrawing = { points: [{startX: e.clientX, startY: e.clientY}], thickness: penSize, color: penColor, shapeType: 'rectangle'};
   //draw(e);
-  
-  drawRectangle(e);
+  switch(currentPathType){
+    case 'rectangle':
+      currentPath = new Rectangle(penSize, penColor, e.clientX, e.clientY);
+      drawPath(e);
+  }
+   
+  //drawRectangle(e);
 }
 
 function endPosition(e) {
   //drawRectangle(e);
   painting = false;
   ctx.beginPath();
+  let points = [currentDrawing['points'][0]];
+  let {endX, endY} = currentDrawing['points'][currentDrawing['points'].length - 1];
+  points.push({endX, endY});
+  currentDrawing['points'] = points;
   console.log(currentDrawing);
-  console.log(maxX, maxY);
   drawings.push(currentDrawing);
   maxX = 0, maxY = 0
 }
@@ -122,6 +131,10 @@ function draw(e) {
   //currentDrawing.push({ x: e.clientX, y: e.clientY });
   currentDrawing["points"].push({ x: e.clientX, y: e.clientY });
   //   console.log(drawings);
+}
+
+function drawPath(e){
+  if(painting) currentPath.render(ctx, e);
 }
 
 
@@ -187,7 +200,7 @@ function drawRectangle(e){
 
 canvas.addEventListener("mousedown", startPosition);
 canvas.addEventListener("mouseup", endPosition);
-canvas.addEventListener("mousemove", drawRectangle);
+canvas.addEventListener("mousemove", (e) => drawPath(e, ));
 
 penThickness.addEventListener("change", (e) => changePenSize(e));
 colorPicker.addEventListener("change", (e) => {
