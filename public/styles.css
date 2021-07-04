@@ -91,9 +91,9 @@ body {
 .cta:active {
   transform: scale(0.94);
 }
-.slider-container {
-  /* margin-right: 20px; */
-}
+/* .slider-container {
+   margin-right: 20px; 
+} */
 #color-picker {
   outline: none;
   border: none;
