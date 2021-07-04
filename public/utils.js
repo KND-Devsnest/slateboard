@@ -15,3 +15,35 @@ function downloadImage(data, filename = "untitled.jpeg") {
   document.body.appendChild(a);
   a.click();
 }
+//https://stackoverflow.com/a/30832210/10159640
+function saveJSON() {
+  let data = JSON.stringify(drawings);
+  let filename = "slateBoard.json";
+  let type = "json";
+  var file = new Blob([data], { type: type });
+  if (window.navigator.msSaveOrOpenBlob)
+    // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename);
+  else {
+    // Others
+    var a = document.createElement("a"),
+      url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }
+}
+
+function loadJSON() {
+  const textarea = document.getElementById("tarea");
+  drawings = JSON.parse(textarea.value);
+  console.log(drawings);
+  drawings.forEach((i) => {
+    reDraw(i);
+  });
+}
