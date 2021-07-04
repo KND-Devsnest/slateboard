@@ -44,6 +44,9 @@ function loadJSON() {
   drawings = JSON.parse(textarea.value);
   console.log(drawings);
   drawings.forEach((i) => {
+    painting = true;
     reDraw(i);
+    ctx.beginPath();
+    painting = false;
   });
 }
