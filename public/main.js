@@ -1,3 +1,27 @@
+// variables
+let painting = false;
+let penSize = 10;
+let penColor = "black";
+let redo_drawings = [];
+let currentDrawing = [];
+
+const colpkr = document.querySelector(".color-pick");
+
+colpkr.addEventListener("click", () => {
+  document.querySelector(".color-picker-container").classList.toggle("show");
+});
+
+const colbtns = document.querySelectorAll(".col");
+colbtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // console.log(btn);
+    let col = btn.dataset.col;
+    document.querySelector(".color-picker-container").classList.toggle("show");
+    document.querySelector(".sel-col").style.backgroundColor = col;
+    penColor = col;
+  });
+});
+
 var socket,
   URL = "http://localhost:8000";
 let drawings = [];
@@ -24,14 +48,7 @@ canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 // const socket = io("http://localhost:3000");
 // socket.on("init", handleInit);
-let painting = false;
-let penSize = 10;
-let penColor = "black";
-let redo_drawings = [];
-let currentDrawing = [];
-
 penThickness.value = penSize;
-
 function changePenSize(e) {
   console.log(e);
   penSize = e.target.value;

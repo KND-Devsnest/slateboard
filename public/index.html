@@ -11,6 +11,7 @@
     <canvas id="canvas" class="canvas"
       >Your browser does not support HTML5 canvas!</canvas
     >
+    <!-- <div class="toolbar-container"> -->
     <div class="toolbar">
       <div id="pen" class="cta pen selected">
         <svg
@@ -31,7 +32,8 @@
         </svg>
       </div>
       <div class="cta color-pick">
-        <input id="color-picker" type="color" />
+        <!-- <input id="color-picker" type="color" /> -->
+        <div class="sel-col"></div>
       </div>
       <div id="erase" class="cta erase">
         <svg
@@ -107,6 +109,13 @@
         </svg>
       </div>
     </div>
+    <div class="color-picker-container">
+      <div class="col1 col" data-col="#4d7eff"></div>
+      <div class="col2 col" data-col="#73dc96"></div>
+      <div class="col3 col" data-col="#ff5e84"></div>
+      <div class="col4 col" data-col="#000"></div>
+    </div>
+    <!-- </div> -->
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="./main.js"></script>
   </body>
