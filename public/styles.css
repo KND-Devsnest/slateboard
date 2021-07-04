@@ -123,61 +123,11 @@ body {
   position: relative;
   /* border: 2px solid black; */
 }
-.color-picker-container {
-  position: absolute;
-  bottom: 0;
-  left: 5%;
-  /* transform: translate(-50%, 0%); */
-  border-radius: 10px;
-  height: 60px;
-  width: 180px;
-  transform: scale(0);
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  padding: 20px;
-  justify-content: space-around;
-  z-index: -1;
-  /* display: none; */
-  transition: ease-in 0.3s;
-  animation: blob 0.3s alternate-reverse;
-  user-select: none;
-}
-.color-picker-container.show {
-  /* bottom: 15%; */
-  /* height: 60px; */
-  position: absolute;
-  bottom: 20%;
-  left: 0%;
-  transform: scale(1);
-  height: 60px;
-  width: 180px;
-  /* display: block; */
-  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.45);
-  z-index: 1;
-  transition: ease-out 0.2s;
-  animation: blob 0.3s;
-  user-select: auto;
-}
-
-@keyframes blob {
-  0% {
-    opacity: 0;
-  }
-  75% {
-    opacity: 1;
-  }
-}
-
 .colors {
-  width: 150px;
+  width: fit-content;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
 }
 
 .col {
@@ -186,10 +136,14 @@ body {
   border-radius: 24px;
   box-sizing: border-box;
   cursor: pointer;
+  margin-right: -5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
 }
 
 .col:hover {
   border: 2px solid rgba(0, 0, 0, 0.25);
+  transform: scale(1.02);
+  z-index: 1;
   transition: ease-out 0.2s;
 }
 
@@ -248,3 +202,65 @@ body {
   animation: blob 1s;
   transition: ease 0.4s;
 } */
+
+.shapes {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  z-index: 2;
+  transition: ease 0.3s;
+  border-radius: 5px;
+}
+
+.shape {
+  width: 18px;
+  height: 18px;
+  /* border: 2px solid rgba(0, 0, 0, 0.25); */
+  display: none;
+}
+#line {
+  width: 2px;
+  background-color: black;
+  transform: rotate(30deg);
+}
+
+#rect {
+  height: 14px;
+  width: 18px;
+  border: 2px solid black;
+}
+
+#sqr {
+  height: 14px;
+  width: 14px;
+  border: 2px solid black;
+}
+
+#crl {
+  height: 16px;
+  width: 16px;
+  border: 2px solid black;
+  border-radius: 16px;
+}
+
+#elp {
+  height: 16px;
+  width: 18px;
+  border: 2px solid black;
+  border-radius: 16px;
+}
+
+.shape.show {
+  display: block;
+}
+
+.shapes.expanded {
+  width: 120px;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  transition: ease 0.3s;
+}
