@@ -108,8 +108,8 @@ const ctx = canvas.getContext("2d");
 const penThickness = document.getElementById("thickness");
 const colorPicker = document.getElementById("color-picker");
 
-canvas.height = window.innerHeight - 0.05 * window.innerHeight;
-canvas.width = window.innerWidth - 0.03 * window.innerWidth;
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
 
 ctx.fillStyle = "#fff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);

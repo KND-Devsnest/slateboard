@@ -56,6 +56,7 @@ canvas.addEventListener("drop", (event) => {
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
       let loadedData = JSON.parse(event.target.result);
+      clearCanvas();
       drawings = loadedData;
       console.log(drawings);
       drawings.forEach((i) => {
