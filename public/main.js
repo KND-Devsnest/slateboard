@@ -3,7 +3,7 @@ let painting = false;
 let penSize = 10;
 let penColor = "black";
 let redo_drawings = [];
-let currentDrawing = {};
+let currentDrawing = [];
 let shapeType = "pen"; // [line, square, rectangle, circle, ellipse, eraser]
 
 const shapebtn = document.querySelector(".shapes");
@@ -18,10 +18,7 @@ shapebtn.addEventListener("click", () => {
 
 let shapes = document.querySelectorAll(".shape");
 shapes.forEach((e) => {
-  e.addEventListener("click", () => {
-    shapeType = e.dataset.shape;
-    console.log(e.dataset.shape);
-  });
+  e.addEventListener("click", () => console.log(e));
 });
 
 const colbtns = document.querySelectorAll(".col");
@@ -34,21 +31,8 @@ colbtns.forEach((btn) => {
   });
 });
 
-document.getElementById("pen").addEventListener("click", () => {
-  undoDraw(shouldIPop = false)
-  shapeType = "pen";
-  document.getElementById("pen").classList.toggle("selected");
-  document.getElementById("erase").classList.toggle("selected");
-});
-
-document.getElementById("erase").addEventListener("click", () => {
-  shapeType = "eraser";
-  document.getElementById("pen").classList.toggle("selected");
-  document.getElementById("erase").classList.toggle("selected");
-});
-
 var socket,
-  URL = "http://localhost:8000";
+  URL1 = "http://localhost:8000";
 let drawings = [];
 /*socket = io.connect(URL);
 socket.on("hi", (data) => {
@@ -70,8 +54,8 @@ const ctx = canvas.getContext("2d");
 const penThickness = document.getElementById("thickness");
 const colorPicker = document.getElementById("color-picker");
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+canvas.height = window.innerHeight - 0.05 * window.innerHeight;
+canvas.width = window.innerWidth - 0.03 * window.innerWidth;
 
 ctx.fillStyle = "#fff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -97,7 +81,7 @@ function redoDrawing() {
 }
 
 function undoDraw(shouldIPop = true) {
-  if (shouldIPop === true && drawings.length > 0) {
+  if (shouldIPop === true) {
     redo_drawings.push(drawings.pop()); //save values in redo array
   }
 
@@ -123,7 +107,13 @@ function reDraw(currentDrawing) {
   ctx.strokeStyle = currentDrawing["color"];
   ctx.lineWidth = currentDrawing["thickness"];
 
-  if (
+  if (currentDrawing.shapeType === "eraser") {
+    ctx.fillStyle = currentDrawing.color;
+    currentDrawing.points.forEach((item, index) => {
+      ctx.beginPath();
+      ctx.fillRect(item.x, item.y, item.length, item.length);
+    });
+  } else if (
     currentDrawing.shapeType === "ellipse" ||
     currentDrawing.shapeType === "circle"
   ) {
@@ -138,12 +128,10 @@ function reDraw(currentDrawing) {
     ctx.ellipse(
       centerX,
       centerY,
-      Math.abs(currentDrawing.points[1].x - centerX),
-      Math.abs(
-        currentDrawing.shapeType === "ellipse"
+      currentDrawing.points[1].x - centerX,
+      currentDrawing.shapeType === "ellipse"
         ? currentDrawing.points[1].y - centerY
-        : currentDrawing.points[1].x - centerX
-      ),
+        : currentDrawing.points[1].x - centerX,
       0,
       0,
       2 * Math.PI
@@ -172,15 +160,16 @@ currentDrawing = {
 */
 
 function startPosition(e) {
-  console.log(drawings);
+  console.log(e);
+
   painting = true;
   currentDrawing = {
     points: [],
     thickness: penSize,
-    color: shapeType == "eraser" ? "white" : penColor,
+    color: shapeType == "eraser" ? "red" : penColor,
     shapeType,
   };
-  //console.log(currentDrawing);
+  console.log(currentDrawing);
   draw(e);
 }
 
@@ -213,68 +202,58 @@ function endPosition() {
     ];
   }
   drawings.push(currentDrawing);
-  console.log(drawings);
   currentDrawing = {};
 }
 function draw(e) {
-  if(shapeType === 'eraser' && painting === false) {
-    //console.log(e.type, 'here');
-    undoDraw(shouldIPop = false);
-    ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.lineWidth = 1;
-    ctx.arc(e.clientX, e.clientY, penSize/2, 0, 2*Math.PI);
-    ctx.stroke();
-    ctx.beginPath();
-  }
-/*if (shapeType === "eraser") {
+  console.log(e);
+  if (shapeType === "eraser") {
     undoDraw((shouldIPop = false));
     let halfLength = Math.max(20, Math.floor((penSize * 10) / 2));
-    let x = e.clientX - halfLength,
-      y = e.clientY - halfLength;
+    let x = e.offsetX - halfLength,
+      y = e.offsetY - halfLength;
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.rect(x, y, 2 * halfLength, 2 * halfLength);
     ctx.strokeStyle = "black";
     ctx.stroke();
     //ctx.begin();
-  }*/
+  }
 
   if (!painting) return;
   ctx.lineWidth = penSize;
   ctx.lineCap = "round";
 
-  if (currentDrawing.shapeType == "pen" || currentDrawing.shapeType == 'eraser') {
-    ctx.lineTo(e.clientX, e.clientY);
-    ctx.strokeStyle = currentDrawing.shapeType == 'eraser' ? 'white' : penColor;
+  if (currentDrawing.shapeType == "pen") {
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.strokeStyle = penColor;
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(e.clientX, e.clientY);
-    currentDrawing["points"].push({ x: e.clientX, y: e.clientY });
+    ctx.moveTo(e.offsetX, e.offsetY);
+    currentDrawing["points"].push({ x: e.offsetX, y: e.offsetY });
   } else if (currentDrawing.shapeType == "line") {
     if (currentDrawing.points.length == 0) {
       //first point of line
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
     }
     undoDraw((shouldIPop = false));
     painting = true;
 
-    currentDrawing.points[1] = { x: e.clientX, y: e.clientY };
+    currentDrawing.points[1] = { x: e.offsetX, y: e.offsetY };
     ctx.beginPath();
     ctx.moveTo(currentDrawing.points[0].x, currentDrawing.points[0].y);
-    ctx.lineTo(e.clientX, e.clientY);
+    ctx.lineTo(e.offsetX, e.offsetY);
     ctx.stroke();
     ctx.beginPath(); //a mystery !
   } else if (currentDrawing.shapeType == "rectangle") {
     if (currentDrawing.points.length == 0) {
       //first point of line
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
     }
     undoDraw((shouldIPop = false));
     painting = true;
-    currentDrawing.points[1] = { x: e.clientX, y: e.clientY };
+    currentDrawing.points[1] = { x: e.offsetX, y: e.offsetY };
     ctx.beginPath();
     /*
       (x1, y1) ----------------- (x2, y1)
@@ -284,26 +263,26 @@ function draw(e) {
           (x1, y2)
     */
     ctx.moveTo(currentDrawing.points[0].x, currentDrawing.points[0].y);
-    ctx.lineTo(e.clientX, currentDrawing.points[0].y);
-    ctx.lineTo(e.clientX, e.clientY);
-    ctx.lineTo(currentDrawing.points[0].x, e.clientY);
+    ctx.lineTo(e.offsetX, currentDrawing.points[0].y);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.lineTo(currentDrawing.points[0].x, e.offsetY);
     ctx.lineTo(currentDrawing.points[0].x, currentDrawing.points[0].y);
     ctx.stroke();
     ctx.beginPath();
   } else if (currentDrawing.shapeType == "square") {
     if (currentDrawing.points.length == 0) {
       //first point of line
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
     }
     undoDraw((shouldIPop = false));
     painting = true;
-    currentDrawing.points[1] = { x: e.clientX, y: e.clientY };
+    currentDrawing.points[1] = { x: e.offsetX, y: e.offsetY };
     ctx.beginPath();
 
     let x1 = currentDrawing.points[0].x,
       y1 = currentDrawing.points[0].y,
-      x2 = e.clientX,
+      x2 = e.offsetX,
       y2 = y1 + (x2 - x1);
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y1);
@@ -315,49 +294,49 @@ function draw(e) {
   } else if (currentDrawing.shapeType === "ellipse") {
     if (currentDrawing.points.length == 0) {
       //first point of line
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
     }
     console.log("ellipse, here");
     undoDraw((shouldIPop = false));
     painting = true;
-    currentDrawing.points[1] = { x: e.clientX, y: e.clientY };
-    let centerX = Math.floor((currentDrawing.points[0].x + e.clientX) / 2),
-      centerY = Math.floor((currentDrawing.points[0].y + e.clientY) / 2);
+    currentDrawing.points[1] = { x: e.offsetX, y: e.offsetY };
+    let centerX = Math.floor((currentDrawing.points[0].x + e.offsetX) / 2),
+      centerY = Math.floor((currentDrawing.points[0].y + e.offsetY) / 2);
     ctx.beginPath();
     ctx.ellipse(
       centerX,
       centerY,
-      Math.abs(e.clientX - centerX),
-      Math.abs(e.clientY - centerY),
+      e.offsetX - centerX,
+      e.offsetY - centerY,
       0,
       0,
       2 * Math.PI
     );
     ctx.stroke();
     ctx.beginPath();
-    //console.log(centerX, centerY, e.clientX-centerX, e.clientY - centerY, Math.PI / 4, 0, 2 * Math.PI);
+    //console.log(centerX, centerY, e.offsetX-centerX, e.offsetY - centerY, Math.PI / 4, 0, 2 * Math.PI);
   } else if (currentDrawing.shapeType === "circle") {
     if (currentDrawing.points.length == 0) {
       //first point of line
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
-      currentDrawing.points.push({ x: e.clientX, y: e.clientY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
+      currentDrawing.points.push({ x: e.offsetX, y: e.offsetY });
     }
     undoDraw((shouldIPop = false));
     painting = true;
     let x1 = currentDrawing.points[0].x,
       y1 = currentDrawing.points[0].y,
-      x2 = e.clientX,
+      x2 = e.offsetX,
       y2 = y1 + (x2 - x1);
-    currentDrawing.points[1] = { x: e.clientX, y: y2 };
+    currentDrawing.points[1] = { x: e.offsetX, y: y2 };
     let centerX = Math.floor((x1 + x2) / 2),
       centerY = Math.floor((y1 + y2) / 2);
     ctx.beginPath();
     ctx.ellipse(
       centerX,
       centerY,
-      Math.abs(e.clientX - centerX),
-      Math.abs(e.clientX - centerX),
+      Math.abs(e.offsetX - centerX),
+      Math.abs(e.offsetX - centerX),
       0,
       0,
       2 * Math.PI
@@ -365,12 +344,12 @@ function draw(e) {
     ctx.stroke();
     ctx.beginPath();
     console.log(centerX, centerY);
-    //console.log(centerX, centerY, e.clientX-centerX, e.clientY - centerY, Math.PI / 4, 0, 2 * Math.PI);
+    //console.log(centerX, centerY, e.offsetX-centerX, e.offsetY - centerY, Math.PI / 4, 0, 2 * Math.PI);
   } else if (currentDrawing.shapeType === "eraser") {
     console.log("here");
     let halfLength = Math.max(20, Math.floor((penSize * 10) / 2));
-    let x = e.clientX - halfLength,
-      y = e.clientY - halfLength;
+    let x = e.offsetX - halfLength,
+      y = e.offsetY - halfLength;
     ctx.fillStyle = "red"; // temporary
     ctx.beginPath();
     ctx.fillRect(x, y, halfLength * 2, halfLength * 2);
@@ -395,4 +374,14 @@ function handleInit(msg) {
 
 window.addEventListener("resize", (event) => {
   reDraw();
+});
+
+document.getElementById("pen").addEventListener("click", () => {
+  document.getElementById("pen").classList.toggle("selected");
+  document.getElementById("erase").classList.toggle("selected");
+});
+
+document.getElementById("erase").addEventListener("click", () => {
+  document.getElementById("pen").classList.toggle("selected");
+  document.getElementById("erase").classList.toggle("selected");
 });
