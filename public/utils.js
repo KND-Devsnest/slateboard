@@ -5,10 +5,10 @@ function download() {
   console.log(canvas.toDataURL("image/jpeg", 1.0));
   console.log(temp);
 
-  downloadImage(temp, "untitled.jpeg");
+  downloadImage(temp, "untitled-slateboard.jpeg");
 }
 //From https://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
-function downloadImage(data, filename = "untitled.jpeg") {
+function downloadImage(data, filename = "untitled-slateboard.jpeg") {
   var a = document.createElement("a");
   a.href = data;
   a.download = filename;
