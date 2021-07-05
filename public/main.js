@@ -3,7 +3,7 @@ let painting = false;
 let penSize = 10;
 let penColor = "black";
 let redo_drawings = [];
-let currentDrawing = [];
+let currentDrawing = {};
 let shapeType = "pen"; // [line, square, rectangle, circle, ellipse, eraser]
 
 const shapebtn = document.querySelector(".shapes");
@@ -35,6 +35,7 @@ colbtns.forEach((btn) => {
 });
 
 document.getElementById("pen").addEventListener("click", () => {
+  undoDraw(shouldIPop = false)
   shapeType = "pen";
   document.getElementById("pen").classList.toggle("selected");
   document.getElementById("erase").classList.toggle("selected");
@@ -96,7 +97,7 @@ function redoDrawing() {
 }
 
 function undoDraw(shouldIPop = true) {
-  if (shouldIPop === true) {
+  if (shouldIPop === true && drawings.length > 0) {
     redo_drawings.push(drawings.pop()); //save values in redo array
   }
 
