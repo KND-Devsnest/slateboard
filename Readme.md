@@ -19,6 +19,8 @@
 
 ### Intro :- 
 
+<img  src="https://github.com/KND-Devsnest/slateboard/blob/prod/Readme-gif/intro.gif" width=50%>
+
 The Whiteboard app is a tool underestimated by many but used by even more people than we can think of !! , so how about a whiteboard which is easy to use 
 and coded just with HTML5 and JS ? ,well that's the question that we were given when we set out to make this awesome whiteboard and would like to discuss
 the UI so that you won't get lost drawing lines over lines.
