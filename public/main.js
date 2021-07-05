@@ -161,7 +161,6 @@ currentDrawing = {
 
 function startPosition(e) {
   console.log(e);
-
   painting = true;
   currentDrawing = {
     points: [],

@@ -15,3 +15,56 @@ function downloadImage(data, filename = "untitled-slateboard.jpeg") {
   document.body.appendChild(a);
   a.click();
 }
+//https://stackoverflow.com/a/30832210/10159640
+function saveJSON() {
+  let data = JSON.stringify(drawings);
+  let filename = "slateBoard.json";
+  let type = "json";
+  var file = new Blob([data], { type: type });
+  if (window.navigator.msSaveOrOpenBlob)
+    // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename);
+  else {
+    // Others
+    var a = document.createElement("a"),
+      url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }
+}
+canvas.addEventListener("dragover", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "copy";
+});
+
+canvas.addEventListener("drop", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  const fileList = event.dataTransfer.files;
+  for (let i = 0; i < fileList.length; i++) {
+    const file = fileList[i];
+    load(file);
+  }
+  function load(file) {
+    const reader = new FileReader();
+    reader.addEventListener("load", (event) => {
+      let loadedData = JSON.parse(event.target.result);
+      drawings = loadedData;
+      console.log(drawings);
+      drawings.forEach((i) => {
+        painting = true;
+        reDraw(i);
+        ctx.beginPath();
+        painting = false;
+      });
+    });
+    reader.readAsText(file);
+  }
+});
