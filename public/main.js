@@ -1,6 +1,6 @@
 // var socket,
 //   URL = "http://localhost:8000";
-// let drawings = [];
+let drawings = [];
 // socket = io.connect(URL);
 // socket.on("hi", (data) => {
 //   drawings = data;
@@ -111,12 +111,13 @@ function endPosition(e) {
   //drawRectangle(e);
   painting = false;
   ctx.beginPath();
-  let points = [currentDrawing['points'][0]];
-  let {endX, endY} = currentDrawing['points'][currentDrawing['points'].length - 1];
-  points.push({endX, endY});
-  currentDrawing['points'] = points;
-  console.log(currentDrawing);
-  drawings.push(currentDrawing);
+  console.log(currentPath);
+  // let points = [currentDrawing['points'][0]];
+  // let {endX, endY} = currentDrawing['points'][currentDrawing['points'].length - 1];
+  // points.push({endX, endY});
+  // currentDrawing['points'] = points;
+  // console.log(currentDrawing);
+  drawings.push(currentPath);
   maxX = 0, maxY = 0
 }
 function draw(e) {
@@ -138,69 +139,69 @@ function drawPath(e){
 }
 
 
-function drawRectangle(e){
-  if (!painting) return;
-  ctx.globalCompositeOperation='destination-over';
-  ctx.lineWidth = penSize;
-  ctx.lineCap = "round";
-  let cdLength = currentDrawing['points'].length; 
-  let startX = currentDrawing['points'][0]['startX'];
-  let startY = currentDrawing['points'][0]['startY'];
-  let x = cdLength == 1 ? currentDrawing['points'][cdLength-1]['startX'] : currentDrawing['points'][cdLength-1]['x'];
-  let y = cdLength == 1 ? currentDrawing['points'][cdLength-1]['startY'] : currentDrawing['points'][cdLength-1]['y'];
-  console.log(x, y);
+// function drawRectangle(e){
+//   if (!painting) return;
+//   ctx.globalCompositeOperation='destination-over';
+//   ctx.lineWidth = penSize;
+//   ctx.lineCap = "round";
+//   let cdLength = currentDrawing['points'].length; 
+//   let startX = currentDrawing['points'][0]['startX'];
+//   let startY = currentDrawing['points'][0]['startY'];
+//   let x = cdLength == 1 ? currentDrawing['points'][cdLength-1]['startX'] : currentDrawing['points'][cdLength-1]['x'];
+//   let y = cdLength == 1 ? currentDrawing['points'][cdLength-1]['startY'] : currentDrawing['points'][cdLength-1]['y'];
+//   console.log(x, y);
 
-  //for cleaning old re-render
-  if (startX < x){
-    if (startY < y) ctx.clearRect(startX, startY, x, y);
-    else ctx.clearRect(startX - 10, startY, maxX, minY - startY - 10);
-  }else{
-    if (startY < y) ctx.clearRect(startX, startY, minX - startX - 10 , y);
-    else ctx.clearRect(startX, startY, minX - startX - 10, minY - startY - 10);
-  }
+//   //for cleaning old re-render
+//   if (startX < x){
+//     if (startY < y) ctx.clearRect(startX, startY, x, y);
+//     else ctx.clearRect(startX - 10, startY, maxX, minY - startY - 10);
+//   }else{
+//     if (startY < y) ctx.clearRect(startX, startY, minX - startX - 10 , y);
+//     else ctx.clearRect(startX, startY, minX - startX - 10, minY - startY - 10);
+//   }
 
-  //for removing extra lines left while resizing!
-  if (startX < x){
-    if (startY < y){
-      ctx.clearRect(startX - 10, y, x, maxY);
-      ctx.clearRect(x, startY - 10, maxX, y);
-    }
-    else {
-      console.log("topl");
-      ctx.clearRect(startX - 10, y, x, minY - startY - 10);
-      ctx.clearRect(x, startY - 10, minX, y);
-    }
-  }else{
-    if (startY < y) {
-      ctx.clearRect(startX + 10, y, minX - startX - 10, maxY);
-      ctx.clearRect(x, startY - 10, minX - startX - 10, y);
-    }
-    else {
-      ctx.clearRect(startX + 10, y, minX - startX - 20, maxY);
-      ctx.clearRect(startX + 10, y, minX - startX - 20, minY - startY);
+//   //for removing extra lines left while resizing!
+//   if (startX < x){
+//     if (startY < y){
+//       ctx.clearRect(startX - 10, y, x, maxY);
+//       ctx.clearRect(x, startY - 10, maxX, y);
+//     }
+//     else {
+//       console.log("topl");
+//       ctx.clearRect(startX - 10, y, x, minY - startY - 10);
+//       ctx.clearRect(x, startY - 10, minX, y);
+//     }
+//   }else{
+//     if (startY < y) {
+//       ctx.clearRect(startX + 10, y, minX - startX - 10, maxY);
+//       ctx.clearRect(x, startY - 10, minX - startX - 10, y);
+//     }
+//     else {
+//       ctx.clearRect(startX + 10, y, minX - startX - 20, maxY);
+//       ctx.clearRect(startX + 10, y, minX - startX - 20, minY - startY);
       
-    }
-  }
+//     }
+//   }
 
   // ctx.clearRect(startX - 10, y, x, maxY);
   // ctx.clearRect(x, startY - 10, maxX, y);
 
-  const width = e.clientX - currentDrawing['points'][0]['startX'];
-  const height = e.clientY - currentDrawing['points'][0]['startY'];
-  ctx.rect(currentDrawing['points'][0]['startX'], currentDrawing['points'][0]['startY'], width, height);
-  ctx.strokeStyle = penColor;
-  ctx.stroke();   
-  ctx.beginPath();
-  if (e.clientX > maxX) maxX = e.clientX;
-  else if (e.clientX < minX) minX = e.clientX;
-  if (e.clientY > maxY) maxY = e.clientY;
-  else if (e.clientY < minY) minY = e.clientY;
-  currentDrawing["points"].push({ x: e.clientX, y: e.clientY });
-}
+//   const width = e.clientX - currentDrawing['points'][0]['startX'];
+//   const height = e.clientY - currentDrawing['points'][0]['startY'];
+//   ctx.rect(currentDrawing['points'][0]['startX'], currentDrawing['points'][0]['startY'], width, height);
+//   ctx.strokeStyle = penColor;
+//   ctx.stroke();   
+//   ctx.beginPath();
+//   if (e.clientX > maxX) maxX = e.clientX;
+//   else if (e.clientX < minX) minX = e.clientX;
+//   if (e.clientY > maxY) maxY = e.clientY;
+//   else if (e.clientY < minY) minY = e.clientY;
+//   currentDrawing["points"].push({ x: e.clientX, y: e.clientY });
+// }
 
 canvas.addEventListener("mousedown", startPosition);
 canvas.addEventListener("mouseup", endPosition);
-canvas.addEventListener("mousemove", (e) => drawPath(e, ));
+canvas.addEventListener("mousemove", (e) => drawPath(e));
 
 penThickness.addEventListener("change", (e) => changePenSize(e));
 colorPicker.addEventListener("change", (e) => {

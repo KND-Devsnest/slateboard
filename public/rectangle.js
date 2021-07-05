@@ -17,7 +17,7 @@ class Rectangle{
         let startY = this.startY;
         let x = cdLength <= 1 ? startX : this.points[cdLength-1]['x'];
         let y = cdLength <= 1 ? startY : this.points[cdLength-1]['y'];
-        console.log(x, y);
+        //console.log(x, y);
 
         //for cleaning old re-render
         if (startX < x){
@@ -64,6 +64,10 @@ class Rectangle{
         else if (e.clientX < minX) minX = e.clientX;
         if (e.clientY > maxY) maxY = e.clientY;
         else if (e.clientY < minY) minY = e.clientY;
-        this.points.push({ x: e.clientX, y: e.clientY });
+        //this.points.push({ x: e.clientX, y: e.clientY });
+    }
+
+    postRender(){
+        //this.endX = this.points[]
     }
 }
