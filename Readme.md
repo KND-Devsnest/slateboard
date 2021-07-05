@@ -12,7 +12,7 @@
 
 * [Download & Upload](#download)
 
-* [Click here to Use](#link)
+* [Click here to Use](#play)
 
 
 <a name="intro" />
@@ -63,4 +63,6 @@ the UI so that you won't get lost drawing lines over lines.
 
    * Download your generated sketch so you can show it to others !!! by simply clicking the download button .<br>
    Or better yet Upload your own json type file by simply dragging it into the browser window !!!
-   
+    
+  <a name="play" />  
+ 
