@@ -122,13 +122,7 @@ function reDraw(currentDrawing) {
   ctx.strokeStyle = currentDrawing["color"];
   ctx.lineWidth = currentDrawing["thickness"];
 
-  if (currentDrawing.shapeType === "eraser") {
-    ctx.fillStyle = currentDrawing.color;
-    currentDrawing.points.forEach((item, index) => {
-      ctx.beginPath();
-      ctx.fillRect(item.x, item.y, item.length, item.length);
-    });
-  } else if (
+  if (
     currentDrawing.shapeType === "ellipse" ||
     currentDrawing.shapeType === "circle"
   ) {
@@ -143,10 +137,12 @@ function reDraw(currentDrawing) {
     ctx.ellipse(
       centerX,
       centerY,
-      currentDrawing.points[1].x - centerX,
-      currentDrawing.shapeType === "ellipse"
+      Math.abs(currentDrawing.points[1].x - centerX),
+      Math.abs(
+        currentDrawing.shapeType === "ellipse"
         ? currentDrawing.points[1].y - centerY
-        : currentDrawing.points[1].x - centerX,
+        : currentDrawing.points[1].x - centerX
+      ),
       0,
       0,
       2 * Math.PI
@@ -180,10 +176,10 @@ function startPosition(e) {
   currentDrawing = {
     points: [],
     thickness: penSize,
-    color: shapeType == "eraser" ? "red" : penColor,
+    color: shapeType == "eraser" ? "white" : penColor,
     shapeType,
   };
-  console.log(currentDrawing);
+  //console.log(currentDrawing);
   draw(e);
 }
 
@@ -216,10 +212,21 @@ function endPosition() {
     ];
   }
   drawings.push(currentDrawing);
+  console.log(drawings);
   currentDrawing = {};
 }
 function draw(e) {
-  if (shapeType === "eraser") {
+  if(shapeType === 'eraser' && painting === false) {
+    //console.log(e.type, 'here');
+    undoDraw(shouldIPop = false);
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.arc(e.clientX, e.clientY, penSize/2, 0, 2*Math.PI);
+    ctx.stroke();
+    ctx.beginPath();
+  }
+/*if (shapeType === "eraser") {
     undoDraw((shouldIPop = false));
     let halfLength = Math.max(20, Math.floor((penSize * 10) / 2));
     let x = e.clientX - halfLength,
@@ -230,15 +237,15 @@ function draw(e) {
     ctx.strokeStyle = "black";
     ctx.stroke();
     //ctx.begin();
-  }
+  }*/
 
   if (!painting) return;
   ctx.lineWidth = penSize;
   ctx.lineCap = "round";
 
-  if (currentDrawing.shapeType == "pen") {
+  if (currentDrawing.shapeType == "pen" || currentDrawing.shapeType == 'eraser') {
     ctx.lineTo(e.clientX, e.clientY);
-    ctx.strokeStyle = penColor;
+    ctx.strokeStyle = currentDrawing.shapeType == 'eraser' ? 'white' : penColor;
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(e.clientX, e.clientY);
@@ -320,8 +327,8 @@ function draw(e) {
     ctx.ellipse(
       centerX,
       centerY,
-      e.clientX - centerX,
-      e.clientY - centerY,
+      Math.abs(e.clientX - centerX),
+      Math.abs(e.clientY - centerY),
       0,
       0,
       2 * Math.PI
