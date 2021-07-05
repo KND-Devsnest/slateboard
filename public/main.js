@@ -86,6 +86,8 @@ document.getElementById("erase").addEventListener("click", () => {
 var socket,
   URL1 = "http://localhost:8000";
 let drawings = [];
+let localStorage = window.localStorage;
+
 /*socket = io.connect(URL);
 socket.on("hi", (data) => {
   drawings = data;
@@ -115,6 +117,13 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 // const socket = io("http://localhost:3000");
 // socket.on("init", handleInit);
 
+// For handling resize:after
+if (localStorage.getItem("drawings") !== null) {
+  drawings = JSON.parse(localStorage.getItem("drawings"));
+  undoDraw((shouldIPop = false));
+  localStorage.clear();
+}
+
 penThickness.value = penSize;
 function changePenSize(e) {
   console.log(e);
@@ -136,7 +145,6 @@ function undoDraw(shouldIPop = true) {
   if (shouldIPop === true) {
     redo_drawings.push(drawings.pop()); //save values in redo array
   }
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -427,9 +435,18 @@ function handleInit(msg) {
   console.log(msg);
 }
 
+let callResizeHandler;
 window.addEventListener("resize", (event) => {
-  reDraw();
+  clearTimeout(callResizeHandler);
+  callResizeHandler = setTimeout(handleResize, 100);
 });
+
+function handleResize() {
+  let localStorage = window.localStorage;
+  localStorage.setItem("drawings", JSON.stringify(drawings));
+  // window.location.reload();
+  window.location.href = window.location.href;
+}
 
 document.getElementById("pen").addEventListener("click", () => {
   document.getElementById("pen").classList.add("selected");
