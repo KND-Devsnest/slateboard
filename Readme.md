@@ -29,6 +29,10 @@ the UI so that you won't get lost drawing lines over lines.
 
 #### Features :- 
 
+* #### Toolbar :- 
+
+<img  src="https://github.com/KND-Devsnest/slateboard/blob/prod/Readme-gif/toolbar" width=50%>
+
 * #### Pen :- 
 
  <img  src="https://github.com/KND-Devsnest/slateboard/blob/prod/Readme-gif/using%20pen.gif" width=50%>
