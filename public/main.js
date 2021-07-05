@@ -132,7 +132,7 @@ function redoDrawing() {
 }
 
 function undoDraw(shouldIPop = true) {
-  if (shouldIPop === true) {
+  if (shouldIPop === true && drawings.length > 0) {
     redo_drawings.push(drawings.pop()); //save values in redo array
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
