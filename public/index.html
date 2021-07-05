@@ -45,13 +45,43 @@
         </div> -->
       <input id="color-picker" type="color" />
       <div class="shapes">
-        <div data-shape="line" id="line" class="cta shape"><span></span></div>
+        <div data-shape="line" id="line" class="cta shape"></div>
         <div data-shape="rectangle" id="rect" class="cta shape">
           <span></span>
         </div>
         <div data-shape="square" id="sqr" class="cta shape"><span></span></div>
         <div data-shape="circle" id="crl" class="cta shape"><span></span></div>
         <div data-shape="ellipse" id="elp" class="cta shape"><span></span></div>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="cta shape-icon"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M6 15.2348L12 18.5681L18 15.2348V8.76521L12 5.43188L6 8.76521V15.2348ZM12 2L3 7V17L12 22L21 17V7L12 2Z"
+            fill="currentColor"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="cta close shape feather feather-x"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </div>
       <div id="erase" class="cta erase tooltip">
         <svg
@@ -75,7 +105,12 @@
         <input id="thickness" type="range" min="1" max="20" value="1" />
         <!-- <span class="tooltiptext">Tooltip text</span> -->
       </div>
-      <div id="download" class="cta download tooltip" onclick="download()">
+
+      <div class="dwnlds">
+        <div id="download" class="cta dwnld jpeg tooltip" onclick="download()">
+          .jpeg
+        </div>
+        <div class="cta dwnld json" onclick="saveJSON()">.json</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -86,11 +121,26 @@
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
-          class="feather feather-download"
+          class="cta feather dnld-icon"
         >
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="cta dwnld close feather feather-x"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </div>
       <div class="cta undo tooltip" onclick="undoDraw()">
@@ -150,16 +200,35 @@
         <!-- <span class="tooltiptext">Tooltip text</span> -->
       </div>
     </div>
-    <div class="toast"></div>
+    <a
+      class="info-btn"
+      href="https://github.com/KND-Devsnest/slateboard"
+      target="_blank"
+      ><svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="cta"
+      >
+        <path
+          d="M11 10.9794C11 10.4271 11.4477 9.97937 12 9.97937C12.5523 9.97937 13 10.4271 13 10.9794V16.9794C13 17.5317 12.5523 17.9794 12 17.9794C11.4477 17.9794 11 17.5317 11 16.9794V10.9794Z"
+          fill="currentColor"
+        />
+        <path
+          d="M12 6.05115C11.4477 6.05115 11 6.49886 11 7.05115C11 7.60343 11.4477 8.05115 12 8.05115C12.5523 8.05115 13 7.60343 13 7.05115C13 6.49886 12.5523 6.05115 12 6.05115Z"
+          fill="currentColor"
+        />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12Z"
+          fill="currentColor"
+        /></svg
+    ></a>
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="./utils.js"></script>
     <script src="./main.js"></script>
-    
-    <button
-      onclick="saveJSON()"
-      style="z-index: 3; position: absolute; left: 40px"
-    >
-      test
-    </button>
   </body>
 </html>

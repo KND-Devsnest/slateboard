@@ -9,9 +9,19 @@ let shapeType = "pen"; // [line, square, rectangle, circle, ellipse, eraser]
 const shapebtn = document.querySelector(".shapes");
 shapebtn.addEventListener("click", () => {
   shapebtn.classList.toggle("expanded");
-
+  document.querySelector(".shape-icon").classList.toggle("hide");
   let shapes = document.querySelectorAll(".shape");
   shapes.forEach((e) => {
+    e.classList.toggle("show");
+  });
+});
+
+const dwnldbtn = document.querySelector(".dwnlds");
+dwnldbtn.addEventListener("click", () => {
+  dwnldbtn.classList.toggle("expanded");
+  document.querySelector(".dnld-icon").classList.toggle("hide");
+  let dwnlds = document.querySelectorAll(".dwnld");
+  dwnlds.forEach((e) => {
     e.classList.toggle("show");
   });
 });
@@ -422,11 +432,11 @@ window.addEventListener("resize", (event) => {
 });
 
 document.getElementById("pen").addEventListener("click", () => {
-  document.getElementById("pen").classList.toggle("selected");
-  document.getElementById("erase").classList.toggle("selected");
+  document.getElementById("pen").classList.add("selected");
+  document.getElementById("erase").classList.remove("selected");
 });
 
 document.getElementById("erase").addEventListener("click", () => {
-  document.getElementById("pen").classList.toggle("selected");
-  document.getElementById("erase").classList.toggle("selected");
+  document.getElementById("pen").classList.remove("selected");
+  document.getElementById("erase").classList.add("selected");
 });
