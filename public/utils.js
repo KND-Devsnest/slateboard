@@ -38,15 +38,33 @@ function saveJSON() {
     }, 0);
   }
 }
+canvas.addEventListener("dragover", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "copy";
+});
 
-function loadJSON() {
-  const textarea = document.getElementById("tarea");
-  drawings = JSON.parse(textarea.value);
-  console.log(drawings);
-  drawings.forEach((i) => {
-    painting = true;
-    reDraw(i);
-    ctx.beginPath();
-    painting = false;
-  });
-}
+canvas.addEventListener("drop", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  const fileList = event.dataTransfer.files;
+  for (let i = 0; i < fileList.length; i++) {
+    const file = fileList[i];
+    load(file);
+  }
+  function load(file) {
+    const reader = new FileReader();
+    reader.addEventListener("load", (event) => {
+      let loadedData = JSON.parse(event.target.result);
+      drawings = loadedData;
+      console.log(drawings);
+      drawings.forEach((i) => {
+        painting = true;
+        reDraw(i);
+        ctx.beginPath();
+        painting = false;
+      });
+    });
+    reader.readAsText(file);
+  }
+});
