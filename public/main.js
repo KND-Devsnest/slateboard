@@ -21,8 +21,32 @@ shapes.forEach((e) => {
   e.addEventListener("click", () => {
     shapeType = e.dataset.shape;
     console.log(e.dataset.shape);
+    changeCursor(shapeType);
   });
 });
+
+// https://stackoverflow.com/questions/45962081/css-cursor-pointer-with-svg-image
+function changeCursor(shapeType) {
+  switch (shapeType) {
+    case "square":
+      canvas.style.cursor = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-square'><rect x='3' y='3' width='18' height='18' rx='2' ry='2'/></svg>")
+      16 16,
+    crosshair`;
+      break;
+    case "circle":
+      canvas.style.cursor = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-circle'><circle cx='12' cy='12' r='10'/></svg>") 16 16, crosshair`;
+      break;
+    case "pen":
+      canvas.style.cursor = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-edit-2'><path d='M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z'/></svg>") 16 16, crosshair`;
+      break;
+    case "eraser":
+      canvas.style.cursor = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-linejoin='round' class='feather feather-sidebar'><rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect><path d='M3 9h18'></path></svg>") 16 16, crosshair`;
+      break;
+    default:
+      canvas.style.cursor = "crosshair";
+      return;
+  }
+}
 
 const colbtns = document.querySelectorAll(".col");
 colbtns.forEach((btn) => {
@@ -35,14 +59,16 @@ colbtns.forEach((btn) => {
 });
 
 document.getElementById("pen").addEventListener("click", () => {
-  undoDraw(shouldIPop = false)
+  undoDraw((shouldIPop = false));
   shapeType = "pen";
+  changeCursor(shapeType);
   document.getElementById("pen").classList.toggle("selected");
   document.getElementById("erase").classList.toggle("selected");
 });
 
 document.getElementById("erase").addEventListener("click", () => {
   shapeType = "eraser";
+  changeCursor(shapeType);
   document.getElementById("pen").classList.toggle("selected");
   document.getElementById("erase").classList.toggle("selected");
 });
@@ -141,8 +167,8 @@ function reDraw(currentDrawing) {
       Math.abs(currentDrawing.points[1].x - centerX),
       Math.abs(
         currentDrawing.shapeType === "ellipse"
-        ? currentDrawing.points[1].y - centerY
-        : currentDrawing.points[1].x - centerX
+          ? currentDrawing.points[1].y - centerY
+          : currentDrawing.points[1].x - centerX
       ),
       0,
       0,
@@ -217,17 +243,17 @@ function endPosition() {
   currentDrawing = {};
 }
 function draw(e) {
-  if(shapeType === 'eraser' && painting === false) {
+  if (shapeType === "eraser" && painting === false) {
     //console.log(e.type, 'here');
-    undoDraw(shouldIPop = false);
-    ctx.strokeStyle = 'black';
+    undoDraw((shouldIPop = false));
+    ctx.strokeStyle = "black";
     ctx.beginPath();
     ctx.lineWidth = 1;
-    ctx.arc(e.clientX, e.clientY, penSize/2, 0, 2*Math.PI);
+    ctx.arc(e.clientX, e.clientY, penSize / 2, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.beginPath();
   }
-/*if (shapeType === "eraser") {
+  /*if (shapeType === "eraser") {
     undoDraw((shouldIPop = false));
     let halfLength = Math.max(20, Math.floor((penSize * 10) / 2));
     let x = e.clientX - halfLength,
@@ -244,9 +270,12 @@ function draw(e) {
   ctx.lineWidth = penSize;
   ctx.lineCap = "round";
 
-  if (currentDrawing.shapeType == "pen" || currentDrawing.shapeType == 'eraser') {
+  if (
+    currentDrawing.shapeType == "pen" ||
+    currentDrawing.shapeType == "eraser"
+  ) {
     ctx.lineTo(e.clientX, e.clientY);
-    ctx.strokeStyle = currentDrawing.shapeType == 'eraser' ? 'white' : penColor;
+    ctx.strokeStyle = currentDrawing.shapeType == "eraser" ? "white" : penColor;
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(e.clientX, e.clientY);
