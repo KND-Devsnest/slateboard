@@ -201,6 +201,7 @@ function reDraw(currentDrawing) {
     ctx.stroke();
     ctx.beginPath();
   } else {
+    if (currentDrawing["points"] === undefined) return;
     // polygon
     currentDrawing["points"].forEach(({ x, y }, inx) => {
       ctx.lineCap = "round";
