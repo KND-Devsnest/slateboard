@@ -12,7 +12,7 @@
 
 * [Download & Upload](#download)
 
-* [Click here to Use](#play)
+* [Click here to Use](https://knd-devsnest.github.io/slateboard/) ▶
 
 
 <a name="intro" />
