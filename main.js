@@ -126,6 +126,12 @@ if (localStorage.getItem("drawings") !== null) {
   localStorage.clear();
 }
 
+if (localStorage.getItem("backup") !== null) {
+  drawings = JSON.parse(localStorage.getItem("backup"));
+  undoDraw((shouldIPop = false));
+  localStorage.clear();
+}
+
 penThickness.value = penSize;
 function changePenSize(e) {
   console.log(e);
@@ -460,3 +466,7 @@ document.getElementById("erase").addEventListener("click", () => {
   document.getElementById("pen").classList.remove("selected");
   document.getElementById("erase").classList.add("selected");
 });
+
+window.onbeforeunload = function (event) {
+  localStorage.setItem("backup", JSON.stringify(drawings));
+};
